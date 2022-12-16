@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const express = require("express");
-app = express();
+const app = express();
 
 //Import mongoose and connect to the mongodb database
 const mongoose = require("mongoose");
@@ -39,6 +39,11 @@ filesNames.forEach((filename) => {
   var route = path.join(routesPath, filename);
   var router = require(route);
   app.use(`/${path.parse(route).name}`, router);
+});
+
+app.use((req, res, next) => {
+  console.log("Req Received");
+  next();
 });
 
 // Start the server
