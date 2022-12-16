@@ -6,19 +6,9 @@ const path = require("path");
 const express = require("express");
 const app = express();
 
-//Import mongoose and connect to the mongodb database
+//Import mongoose and set strictQuery to true (depracated warning)
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
-mongoose.connect(
-  process.env.MONGODB_CONNECTION_URI,
-  () => {
-    "Connected to mongoDB database";
-  },
-  (err) => {
-    "Could not connect to mongoDB database";
-    console.log(err);
-  }
-);
 
 //Constants
 PORT = process.env.PORT || 8000;
@@ -46,7 +36,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server up and listening on port ${PORT}`);
-});
+//Connect to MongoDB and Start the server
+mongoose.connect(
+  process.env.MONGODB_CONNECTION_URI,
+  () => {
+    console.log("Connected to mongoDB database");
+
+    //Start the server after mongoose client is connected for serverless
+    app.listen(PORT, () => {
+      console.log(`Server up and listening on port ${PORT}`);
+    });
+  },
+  (err) => {
+    "Could not connect to mongoDB database";
+    console.log(err);
+  }
+);
