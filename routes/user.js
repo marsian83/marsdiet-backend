@@ -6,7 +6,7 @@ const User = require("../models/User");
 //GET REQUESTS
 router.get("/info/:uid", async (req, res) => {
   try {
-    //check if the given uid is not valid
+    //check if the given uid does not exist in database
     if (!(await User.exists({ uid: req.params.uid }))) {
       //return a response and stop any further execution if given uid is invalid
       return res.status(404).send({
@@ -53,6 +53,15 @@ router.get("/auth/info/:uid", async (req, res) => {
 //POST REQUESTS
 router.post("/new/:uid", async (req, res) => {
   try {
+    //check if the given uid is already registered
+    if (await User.exists({ uid: req.params.uid })) {
+      //return a response and stop any further execution if given uid is invalid
+      return res.status(400).send({
+        message: "Something went wrong",
+        error: "The uid is already registered on the database",
+      });
+    }
+
     //Create an empty object to hold new user's data
     newUser = { uid: req.params.uid };
 
