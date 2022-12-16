@@ -36,15 +36,6 @@ router.get("/info/:uid", async (req, res) => {
 
 router.get("/auth/info/:uid", async (req, res) => {
   try {
-    //check if the given uid is not valid
-    if (!(await User.exists({ uid: req.params.uid }))) {
-      //return a response and stop any further execution if given uid is invalid
-      return res.status(404).send({
-        message: "Something went wrong",
-        error: "The uid is not registered on the database",
-      });
-    }
-
     //get User's info from firebase
     const userInfo = await auth.getUser(req.params.uid);
 
