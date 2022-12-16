@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const { initializeApp } = require("firebase-admin/app");
 const { getAuth } = require("firebase-admin/auth");
+const {credential} = require("firebase-admin")
 
 const firebaseConfig = {
   type: process.env.FIREBASE_ADMIN_TYPE,
@@ -17,6 +18,9 @@ const firebaseConfig = {
   client_x509_cert_url: process.env.FIREBASE_ADMIN_CLIENT_X509_CERT_URL,
 };
 
-const app = initializeApp(firebaseConfig);
+const app = initializeApp({
+  credential:credential.cert(firebaseConfig)
+}
+);
 const auth = getAuth(app)
 module.exports = { app, auth };

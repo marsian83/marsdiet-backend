@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
 const { auth } = require("../firebase");
 const User = require("../models/User");
 
