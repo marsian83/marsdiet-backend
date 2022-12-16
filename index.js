@@ -32,7 +32,6 @@ filesNames.forEach((filename) => {
 });
 
 app.use((req, res, next) => {
-  console.log("Req Received");
   next();
 });
 
