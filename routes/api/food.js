@@ -44,9 +44,9 @@ router.get("/search/calories", async (req, res) => {
       })
     ).data;
 
-    //format response for calories
+    //empty object to hold reponse
     const response = {};
-
+    //format response for calories
     Object.entries(results.items).forEach((entry) => {
       response[entry[1].name] = entry[1].calories;
     });

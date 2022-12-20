@@ -18,9 +18,9 @@ const firebaseConfig = {
   client_x509_cert_url: process.env.FIREBASE_ADMIN_CLIENT_X509_CERT_URL,
 };
 
-const app = initializeApp({
+const admin = initializeApp({
   credential:credential.cert(firebaseConfig)
 }
 );
-const auth = getAuth(app)
-module.exports = { app, auth };
+const auth = getAuth(admin)
+module.exports = { admin, auth };

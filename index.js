@@ -35,6 +35,41 @@ app.use((req, res, next) => {
   next();
 });
 
+const {auth} = require('./firebase')
+
+// Define a middleware function to verify the Firebase ID token
+function verifyFirebaseIdToken(req, res, next) {
+  // Extract the token from the `Authorization` header
+  const header = req.headers.authorization;
+  if (!header) {
+    res.status(401).send('Unauthorized: No `Authorization` header found');
+    return;
+  }
+  const token = header.split('Bearer ')[1];
+  if (!token) {
+    res.status(401).send('Unauthorized: No token found in `Authorization` header');
+    return;
+  }
+
+  // Verify the token using the Firebase Admin SDK
+  auth.verifyIdToken(token)
+    .then(decodedToken => {
+      req.user = decodedToken;
+      next();
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(401).send('Unauthorized: Invalid token');
+    });
+}
+
+// Use the middleware function in your routes
+app.get('/protected', verifyFirebaseIdToken, (req, res) => {
+  // The request is authenticated at this point, so you can access the user's ID using req.user.uid
+  res.send('Hello, authenticated user with ID: ' + req.user.uid);
+});
+
+
 //Connect to MongoDB and Start the server
 mongoose.connect(
   process.env.MONGODB_CONNECTION_URI,
